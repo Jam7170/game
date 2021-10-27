@@ -1,22 +1,27 @@
 version = "0.0.1"
 
+
+#global variables
 day = 1
-gold = float(10)
-goldPerday = float(1)
+gold = 10
+goldPerday = 1
 hasJob = True
-wage = float(20)
-bonus = 0
+wage = 20
+
+#shop variables
+class shop:
+    bonus = 0
+    price_coffee = 0
 
 def progressDay():
     global day
     global gold
     day += 1
-    gold += goldPerday
-    bonus = 0
+    #gold += goldPerday
+    shop.bonus = 0
     print("Day: " + str(day))
     checkWallet()
 def openShop():
-    global bonus
     global gold
     global wage
     isShopOpen = True
@@ -26,19 +31,30 @@ def openShop():
         buy = (input("Buy>"))
         match buy:
             case "coffee":
-                if gold >= 3:
+                if gold >= shop.price_coffee:
                     print("* You purchased a coffee")
-                    gold -= 3
-                    bonus += 5
+                    gold -= shop.price_coffee
+                    shop.bonus += 10
                 else: print("You have insufficent funds.")
             case "exit":
                 isShopOpen = False
     #exec(open("shop.py").read())
 def checkWallet():
     print("Money: " + str(gold))
-    
+def work():
+    global gold
+    if hasJob == True:
+        print("You spent the day at work.")
+        pay = wage + shop.bonus
+        print(pay)
+        gold += pay
+        progressDay()
+    else: print("You don't have a job.")
+
+
 print("Day: " + str(day))
 checkWallet()
+#Main loop
 while True:
     action = (input(">"))
     
@@ -48,10 +64,8 @@ while True:
         case "shop":
             openShop()
         case "work":
-            if hasJob == True:
-                print("You spent the day at work.")
-                gold += (wage + (bonus/100) * wage)
-                progressDay()
-            else: print("You don't have a job.")
+            work()
+        case"dev_checkbonus":
+            print("Bonus: " + str(shop.bonus))
         case "sleep":
             progressDay()
