@@ -1,77 +1,65 @@
+from os import sep
 import random
+from time import sleep
+from skills import *
+from items import *
+
 
 version = "0.0.1"
+dev_mode = True
 
 day = 1
-gold = float(10)
-goldPerday = 1
-hasJob = True
-wage = float(20)
-bonus = float(0)
+money = 10
+daily_money = 1
+has_job = True
+wage = 20
+bonus = 0
 
-class Item:
-    def __init__(this, name, price, buff):
-        this.name = name
-        this.price = price
-        this.buff = buff
-    
-itmCoffee = Item("Coffee", 3, 5)
-itmTest = Item("Test", 1, 15)
-
-class Skill:
-    skillList = []
-    level = 0
-    def __init__(this, name):
-        this.name = name
-        Skill.skillList.append(this.name)
-        
-    def lvlup(this, amount, message=None):
-        this.level += amount
-        if message == True:
-            print("\"{}\" skill increased!".format(this.name))
-        
-sklCooking = Skill("Cooking")
-sklDance = Skill("Dance")
+def seperator():
+    print('------------------------')
 
 def progressDay():
-    global day
-    global gold
+    global day, money, bonus
     day += 1
-    gold += goldPerday
+    money += daily_money
     bonus = 0
     print("Day: " + str(day))
     checkWallet()
+def checkWallet():
+    print("Money: " + str(money))
 def openShop():
-    global gold; global wage; global bonus
+    global money; global wage; global bonus
     isShopOpen = True
-    # with open('shop.txt', 'r') as reader:
-    #     print(reader.read())
-    while isShopOpen == True:
+    with open('shop.txt', 'r') as reader:
+        print(reader.read())
+    while isShopOpen:
+        seperator()
         buy = (input("Buy>"))
+        buy = buy.lower()
         match buy:
             case "coffee":
                 buyItem(itmCoffee)
             case "test":
                 buyItem(itmTest)
+                
+            case 'wallet':
+                checkWallet()
             case "exit":
                 isShopOpen = False
-    #exec(open("shop.py").read())
 def buyItem(item):
-    global gold; global bonus
-    if gold >= item.price:
-        print("* You purchased a {}".format(item.name))
-        gold -= item.price
+    global money; global bonus
+    if money >= item.price:
+        print(f'* You purchased a {item.name}')
+        money -= item.price
         bonus += item.buff/100
     else: print("You have insufficent funds.")
-def checkWallet():
-    print("Money: " + str(gold))
 def work():
-    global gold
-    if hasJob == True:
+    global money
+    if has_job == True:
         print("You spent the day at work.")
         pay = wage * (bonus+1)
         print(pay)
-        gold += pay
+        money += pay
         progressDay()
     else: print("You don't have a job.")
 def cook():
@@ -81,34 +69,42 @@ def cook():
     if sklCooking.level < 5: print(random.choice(lowCookingDialouge))
     elif sklCooking.level < 8 and sklCooking.level > 4 : print(random.choice(medCookingDialouge))
     else: print(random.choice(highCookingDialouge))
+    if random.randint(0,10) <= 3:
+        sklCooking.lvlup(1, True)
 
 def main():
     print("Day: " + str(day))
     checkWallet()
     #Main loop
     while True:
+        seperator()
         action = (input(">"))
+        seperator()
+        if action.startswith("dev_") and not dev_mode: continue
         
         match action:
-            case "wallet":
+            case "wallet" | 'w':
                 checkWallet()
-            case "shop":
+            case "shop"|'s':
                 openShop()
             case "work":
                 work()
-            case "cook":
-                cook()
+            case 'cook': pass
+                # cook()
             case "sleep":
                 progressDay()
                 
-            case "quit":
-                return False
+            case "quit"|'exit'|'q'|'e':
+                break
                 
-            case "dev_checkbonus":
+            case "dev_bonus":
                 print("Bonus: " + str(bonus))
-            case "skilltest":
+            case "dev_skilltest":
                 sklCooking.lvlup(1, True)
-                print(sklCooking.level)
+                print(f'Cooking Skill: {sklCooking.level}')
+                
+            case _:
+                print('invalid')
                 
 if __name__ == "__main__": main()
 else: print("Imported " + __name__)
