@@ -15,9 +15,6 @@ has_job = True
 wage = 20
 bonus = 0
 
-def seperator():
-    print('------------------------')
-
 def progressDay():
     global day, money, bonus
     day += 1
@@ -33,7 +30,6 @@ def openShop():
     with open('shop.txt', 'r') as reader:
         print(reader.read())
     while isShopOpen:
-        seperator()
         buy = (input("Buy>"))
         buy = buy.lower()
         match buy:
@@ -52,7 +48,7 @@ def buyItem(item):
         print(f'* You purchased a {item.name}')
         money -= item.price
         bonus += item.buff/100
-    else: print("You have insufficent funds.")
+    else: print('You have insufficent funds.')
 def work():
     global money
     if has_job == True:
@@ -77,9 +73,7 @@ def main():
     checkWallet()
     #Main loop
     while True:
-        seperator()
-        action = (input(">"))
-        seperator()
+        action = (input("> "))
         if action.startswith("dev_") and not dev_mode: continue
         
         match action:
@@ -104,7 +98,7 @@ def main():
                 print(f'Cooking Skill: {sklCooking.level}')
                 
             case _:
-                print('invalid')
+                print("Invalid Action")
                 
 if __name__ == "__main__": main()
 else: print("Imported " + __name__)
