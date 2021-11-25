@@ -1,6 +1,5 @@
 from os import sep
 import random
-from time import sleep
 from skills import *
 from items import *
 
@@ -32,16 +31,16 @@ def openShop():
     while isShopOpen:
         buy = (input("Buy>"))
         buy = buy.lower()
-        match buy:
-            case "coffee":
+        if buy == "coffee":
                 buyItem(itmCoffee)
-            case "test":
+        elif buy == "test":
                 buyItem(itmTest)
                 
-            case 'wallet':
+        elif buy == 'wallet':
                 checkWallet()
-            case "exit":
+        elif buy == "exit":
                 isShopOpen = False
+        else: continue
 def buyItem(item):
     global money; global bonus
     if money >= item.price:
@@ -76,29 +75,28 @@ def main():
         action = (input("> "))
         if action.startswith("dev_") and not dev_mode: continue
         
-        match action:
-            case "wallet" | 'w':
+        if action == "wallet":
                 checkWallet()
-            case "shop"|'s':
+        elif action == "shop":
                 openShop()
-            case "work":
+        elif action ==  "work":
                 work()
-            case 'cook': pass
-                # cook()
-            case "sleep":
+        elif 'cook':
+                cook()
+        elif "sleep":
                 progressDay()
                 
-            case "quit"|'exit'|'q'|'e':
+        elif "quit"|'exit'|'q'|'e':
                 break
                 
-            case "dev_bonus":
+        elif "dev_bonus":
                 print("Bonus: " + str(bonus))
-            case "dev_skilltest":
+        elif "dev_skilltest":
                 sklCooking.lvlup(1, True)
                 print(f'Cooking Skill: {sklCooking.level}')
                 
-            case _:
-                print("Invalid Action")
+        else:
+            print("Invalid Action")
                 
 if __name__ == "__main__": main()
 else: print("Imported " + __name__)
