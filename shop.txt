@@ -1,8 +1,11 @@
+
 ---SHOP---
-Coffee - $3
+Coffee - ¤3
     increases work efficieny
     +Paid 5% more for work
-Energy Drink - $5
+Energy Drink - ¤5
     increases work efficieny
     +Paid 10% more for work
+Golden Pan - ¤99999999999
+    makes you super good at cooking
 ----------
